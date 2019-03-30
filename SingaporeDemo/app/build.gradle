@@ -8,13 +8,19 @@ android {
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
+        resConfigs "zh", "en"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+    aaptOptions {
+        //对png进行优化检查
+        cruncherEnabled = false
     }
 }
 

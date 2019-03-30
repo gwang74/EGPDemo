@@ -1,5 +1,9 @@
 package com.android.jcc.singapore.transfer;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.content.ClipData;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
@@ -14,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.SslErrorHandler;
 import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -32,8 +37,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         initView();
-//        mWebView.loadUrl("file:///android_asset/index.html");
-        mWebView.loadUrl("https://weidex.vip");
+        mWebView.loadUrl("file:///android_asset/index.html");
+//        mWebView.loadUrl("https://weidex.vip");
     }
 
     @Override
@@ -130,6 +135,83 @@ public class MainActivity extends AppCompatActivity {
                 handler.proceed(); // 接受所有网站的证书
             }
         });
+
+        mWebView.setWebChromeClient(new WebChromeClient() {
+            // For Android < 3.0
+            public void openFileChooser(ValueCallback<Uri> valueCallback) {
+                uploadMessage = valueCallback;
+                openImageChooserActivity();
+            }
+
+            // For Android  >= 3.0
+            public void openFileChooser(ValueCallback valueCallback, String acceptType) {
+                uploadMessage = valueCallback;
+                openImageChooserActivity();
+            }
+
+            //For Android  >= 4.1
+            public void openFileChooser(ValueCallback<Uri> valueCallback, String
+                    acceptType, String capture) {
+                uploadMessage = valueCallback;
+                openImageChooserActivity();
+            }
+
+            // For Android >= 5.0
+            public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]>
+                    filePathCallback, FileChooserParams fileChooserParams) {
+                uploadMessageAboveL = filePathCallback;
+                openImageChooserActivity();
+                return true;
+            }
+        });
+    }
+
+    /**
+     * 文件选择
+     */
+    private void openImageChooserActivity() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        startActivityForResult(intent, 10000);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 10000) {
+            if (null == uploadMessage && null == uploadMessageAboveL) return;
+            Uri result = data == null || resultCode != RESULT_OK ? null : data.getData();
+            if (uploadMessageAboveL != null) {
+                onActivityResultAboveL(requestCode, resultCode, data);
+            } else if (uploadMessage != null) {
+                uploadMessage.onReceiveValue(result);
+                uploadMessage = null;
+            }
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void onActivityResultAboveL(int requestCode, int resultCode, Intent intent) {
+        if (requestCode != 10000 || uploadMessageAboveL == null)
+            return;
+        Uri[] results = null;
+        if (resultCode == Activity.RESULT_OK) {
+            if (intent != null) {
+                String dataString = intent.getDataString();
+                ClipData clipData = intent.getClipData();
+                if (clipData != null) {
+                    results = new Uri[clipData.getItemCount()];
+                    for (int i = 0; i < clipData.getItemCount(); i++) {
+                        ClipData.Item item = clipData.getItemAt(i);
+                        results[i] = item.getUri();
+                    }
+                }
+                if (dataString != null)
+                    results = new Uri[]{Uri.parse(dataString)};
+            }
+        }
+        uploadMessageAboveL.onReceiveValue(results);
+        uploadMessageAboveL = null;
     }
 
     @Override

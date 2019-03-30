@@ -1,0 +1,14 @@
+{
+  "exHosts": ["ewdjbbl8jgf.jccdex.cn", "e5e9637c2fa.jccdex.cn", "e9joixcvsdvi4sf.jccdex.cn", "eaf28bebdff.jccdex.cn"],
+  "coins": [{
+      "name": "CNY",
+      "label": "CNT",
+      "decimal": 6
+    },
+    {
+      "name": "EGP",
+      "label": "EGP",
+      "decimal": 6
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+html, body, ul, li, ol, dl, dd, dt, p, h1, h2, h3, h4, h5, h6, form, select, input, textarea, img { margin:0; padding:0; }
+img { border:none; }
+th { font-style:normal; font-weight:normal; }
+ul, ol { list-style:none; }
+input::-moz-focus-inner { border:none; padding:0; }
+select, input { vertical-align:middle; }
+input[type="text"], input[type="password"], textarea { outline-style:none; -webkit-appearance:none; text-indent: 5px;}
+textarea { resize:none; }
+table { border-collapse:collapse; }
+a { text-decoration:none; }

@@ -19,3 +19,18 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-keepclassmembers class * extends android.webkit.WebChromeClient{
+    public void openFileChooser(...);
+}
+-assumenosideeffects class android.util.Log {
+    public static *** d(...);
+    public static *** e(...);
+    public static *** i(...);
+    public static *** v(...);
+    public static *** println(...);
+    public static *** w(...);
+    public static *** wtf(...);
+}
+-assumenosideeffects class java.lang.Exception{
+    public *** printStackTrace(...);
+}
