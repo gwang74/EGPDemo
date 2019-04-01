@@ -218,6 +218,12 @@ public class MainActivity extends AppCompatActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (mWebView.canGoBack()) {
+                String url = mWebView.getUrl();
+                if (url.matches(".*/home/MyAccount$") || url.matches(".*/home/PersonalCenter$") || url.matches(".*/home/TransferPayment$")) {
+                    moveTaskToBack(false);
+                    return true;
+                }
+
                 mWebView.goBack();
                 return true;
             } else {
