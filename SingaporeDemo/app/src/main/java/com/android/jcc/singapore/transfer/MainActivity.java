@@ -171,8 +171,9 @@ public class MainActivity extends AppCompatActivity {
      */
     private void openImageChooserActivity() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("*/*");
-        startActivityForResult(intent, 10000);
+        startActivityForResult(Intent.createChooser(intent, "选择文件"), 10000);
     }
 
     @Override
